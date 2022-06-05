@@ -10,6 +10,11 @@ namespace Player
         [SerializeField]
         private CameraManager cameraManager;
 
+        [SerializeField]
+        private Animator animator;
+
+        public bool isInteracting;
+
         private InputManager inputManager;
         private PlayerLocomotion playerLocomotion;
 
@@ -32,6 +37,10 @@ namespace Player
         private void LateUpdate()
         {
             cameraManager.HandleAllCameraMovement();
+
+            isInteracting = animator.GetBool(AnimatorManager.IsInteractingParam);
+            playerLocomotion.isJumping = animator.GetBool(AnimatorManager.IsJumpingParam);
+            animator.SetBool(AnimatorManager.IsGroundedParam, playerLocomotion.isGrounded);
         }
     }
 }

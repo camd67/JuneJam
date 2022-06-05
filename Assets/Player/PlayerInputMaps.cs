@@ -151,6 +151,15 @@ namespace Player
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""aca4a3fa-8f4e-46ad-90e5-75ab03ffae48"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -175,6 +184,28 @@ namespace Player
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e51fb668-55bd-43de-8750-36dfa7600a1b"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fedbdd0-4eea-4c8f-9247-fce695e20bbd"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -188,6 +219,7 @@ namespace Player
             // Player Actions
             m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
             m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
+            m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -289,11 +321,13 @@ namespace Player
         private readonly InputActionMap m_PlayerActions;
         private IPlayerActionsActions m_PlayerActionsActionsCallbackInterface;
         private readonly InputAction m_PlayerActions_Sprint;
+        private readonly InputAction m_PlayerActions_Jump;
         public struct PlayerActionsActions
         {
             private @PlayerInputMaps m_Wrapper;
             public PlayerActionsActions(@PlayerInputMaps wrapper) { m_Wrapper = wrapper; }
             public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
+            public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -306,6 +340,9 @@ namespace Player
                     @Sprint.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnSprint;
                     @Sprint.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnSprint;
                     @Sprint.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnSprint;
+                    @Jump.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnJump;
+                    @Jump.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnJump;
+                    @Jump.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnJump;
                 }
                 m_Wrapper.m_PlayerActionsActionsCallbackInterface = instance;
                 if (instance != null)
@@ -313,6 +350,9 @@ namespace Player
                     @Sprint.started += instance.OnSprint;
                     @Sprint.performed += instance.OnSprint;
                     @Sprint.canceled += instance.OnSprint;
+                    @Jump.started += instance.OnJump;
+                    @Jump.performed += instance.OnJump;
+                    @Jump.canceled += instance.OnJump;
                 }
             }
         }
@@ -325,6 +365,7 @@ namespace Player
         public interface IPlayerActionsActions
         {
             void OnSprint(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
         }
     }
 }

@@ -4,22 +4,29 @@ namespace Player
 {
     public class AnimatorManager : MonoBehaviour
     {
+        public static readonly int IsInteractingParam = Animator.StringToHash("IsInteracting");
+        public static readonly int HorizontalParam = Animator.StringToHash("Horizontal");
+        public static readonly int VerticalParam = Animator.StringToHash("Vertical");
+        public static readonly int IsJumpingParam = Animator.StringToHash("IsJumping");
+        public static readonly int IsGroundedParam = Animator.StringToHash("IsGrounded");
+        public static readonly int FallingAniKey = Animator.StringToHash("Falling");
+        public static readonly int LandingAniKey = Animator.StringToHash("Landing");
+        public static readonly int JumpAniKey = Animator.StringToHash("Jumping");
+
         [SerializeField]
-        private Animator animator;
+        public Animator animator;
 
-        private int horizontalAniKey;
-        private int verticalAniKey;
 
-        private void Awake()
+        public void PlayTargetAnimation(int animationKey, bool isInteracting)
         {
-            horizontalAniKey = Animator.StringToHash("Horizontal");
-            verticalAniKey = Animator.StringToHash("Vertical");
+            animator.SetBool(IsInteractingParam, isInteracting);
+            animator.CrossFade(animationKey, 0.2f);
         }
 
         public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement)
         {
-            animator.SetFloat(horizontalAniKey, horizontalMovement, 0.1f, Time.deltaTime);
-            animator.SetFloat(verticalAniKey, verticalMovement, 0.1f, Time.deltaTime);
+            animator.SetFloat(HorizontalParam, horizontalMovement, 0.1f, Time.deltaTime);
+            animator.SetFloat(VerticalParam, verticalMovement, 0.1f, Time.deltaTime);
         }
     }
 }

@@ -23,12 +23,16 @@ namespace Player
         [Header("Actions")]
         public bool isSprinting;
 
+        public bool jumpInput;
+
         private AnimatorManager animatorManager;
         private PlayerInputMaps playerInputMaps;
+        private PlayerLocomotion playerLocomotion;
 
         private void Awake()
         {
             animatorManager = GetComponent<AnimatorManager>();
+            playerLocomotion = GetComponent<PlayerLocomotion>();
         }
 
         private void OnEnable()
@@ -37,8 +41,12 @@ namespace Player
 
             playerInputMaps.PlayerMovement.Movement.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
             playerInputMaps.PlayerMovement.Camera.performed += ctx => cameraInput = ctx.ReadValue<Vector2>();
+
             playerInputMaps.PlayerActions.Sprint.performed += _ => isSprinting = true;
             playerInputMaps.PlayerActions.Sprint.canceled += _ => isSprinting = false;
+
+            playerInputMaps.PlayerActions.Jump.performed += _ => jumpInput = true;
+            playerInputMaps.PlayerActions.Jump.canceled += _ => jumpInput = false;
 
             playerInputMaps.Enable();
         }
@@ -52,6 +60,7 @@ namespace Player
         {
             HandleMovementInput();
             HandleCameraInput();
+            HandleJumpInput();
         }
 
         private void HandleMovementInput()
@@ -66,6 +75,15 @@ namespace Player
         {
             cameraInputX = cameraInput.x;
             cameraInputY = cameraInput.y;
+        }
+
+        private void HandleJumpInput()
+        {
+            if (jumpInput)
+            {
+                jumpInput = false;
+                playerLocomotion.HandleJump();
+            }
         }
     }
 }

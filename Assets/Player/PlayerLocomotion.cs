@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace Player
 {
@@ -26,13 +27,22 @@ namespace Player
         private float fallingVelocity;
 
         [SerializeField]
-        private bool isGrounded;
+        public bool isGrounded;
 
         [SerializeField]
         private LayerMask groundLayer;
 
         [SerializeField]
         private float footRaycastOffset;
+
+        [SerializeField, Header("Jumping")]
+        private float jumpHeight;
+
+        [SerializeField, Max(0), Tooltip("Must be negative to represent a downward force")]
+        private float gravityIntensity;
+
+        [SerializeField]
+        public bool isJumping;
 
         [SerializeField, Header("Movement Settings")]
         private float movementSpeed;
@@ -43,11 +53,15 @@ namespace Player
         [SerializeField]
         private float rotationSpeed;
 
+        private AnimatorManager animatorManager;
         private InputManager inputManager;
+        private PlayerManager playerManager;
         private Rigidbody playerRigidbody;
 
         private void Awake()
         {
+            animatorManager = GetComponent<AnimatorManager>();
+            playerManager = GetComponent<PlayerManager>();
             inputManager = GetComponent<InputManager>();
             playerRigidbody = GetComponent<Rigidbody>();
         }
@@ -68,7 +82,7 @@ namespace Player
         {
             HandleFallingAndLanding();
 
-            if (!isGrounded)
+            if (playerManager.isInteracting || !isGrounded)
             {
                 return;
             }
@@ -79,6 +93,11 @@ namespace Player
 
         private void HandleMovement()
         {
+            if (isJumping)
+            {
+                return;
+            }
+
             moveDirection = cameraTransform.forward * inputManager.verticalInput;
             moveDirection += cameraTransform.right * inputManager.horizontalInput;
             moveDirection.Normalize();
@@ -119,8 +138,13 @@ namespace Player
 
         private void HandleFallingAndLanding()
         {
-            if (!isGrounded)
+            if (!isGrounded && !isJumping)
             {
+                if (!playerManager.isInteracting)
+                {
+                    animatorManager.PlayTargetAnimation(AnimatorManager.FallingAniKey, true);
+                }
+
                 inAirTimer += Time.deltaTime;
                 // take a slight "step" off the ledge when falling
                 playerRigidbody.AddForce(transform.forward * leapingVelocity);
@@ -132,6 +156,11 @@ namespace Player
 
             if (Physics.SphereCast(spherecastOrigin, FootSphereSize, Vector3.down, out var hit, FootSpherecastDistance, groundLayer))
             {
+                if (!isGrounded && playerManager.isInteracting)
+                {
+                    animatorManager.PlayTargetAnimation(AnimatorManager.LandingAniKey, true);
+                }
+
                 inAirTimer = 0;
                 isGrounded = true;
             }
@@ -139,6 +168,23 @@ namespace Player
             {
                 isGrounded = false;
             }
+        }
+
+        public void HandleJump()
+        {
+            if (!isGrounded)
+            {
+                return;
+            }
+
+            animatorManager.animator.SetBool(AnimatorManager.IsJumpingParam, true);
+            animatorManager.PlayTargetAnimation(AnimatorManager.JumpAniKey, false);
+            var jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
+            // Preserve velocity before jump.
+            // So if you're running forward, you'll jump forward. If you're standing still you'll jump straight up.
+            var playerVelocity = moveDirection;
+            playerVelocity.y = jumpingVelocity;
+            playerRigidbody.velocity = playerVelocity;
         }
     }
 }
