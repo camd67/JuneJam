@@ -32,6 +32,7 @@ namespace Player
         private void Awake()
         {
             animatorManager = GetComponent<AnimatorManager>();
+            // TODO: Change to subscribe
             playerLocomotion = GetComponent<PlayerLocomotion>();
         }
 

@@ -14,19 +14,24 @@ namespace Player
         public static readonly int JumpAniKey = Animator.StringToHash("Jumping");
 
         [SerializeField]
-        public Animator animator;
+        private Animator animator;
 
 
         public void PlayTargetAnimation(int animationKey, bool isInteracting)
         {
-            animator.SetBool(IsInteractingParam, isInteracting);
-            animator.CrossFade(animationKey, 0.2f);
+            // animator.SetBool(IsInteractingParam, isInteracting);
+            // animator.CrossFade(animationKey, 0.2f);
+        }
+
+        public void SetBool(int animationKey, bool value)
+        {
+            // animator.SetBool(animationKey, value);
         }
 
         public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement)
         {
-            animator.SetFloat(HorizontalParam, horizontalMovement, 0.1f, Time.deltaTime);
-            animator.SetFloat(VerticalParam, verticalMovement, 0.1f, Time.deltaTime);
+            // animator.SetFloat(HorizontalParam, horizontalMovement, 0.1f, Time.deltaTime);
+            // animator.SetFloat(VerticalParam, verticalMovement, 0.1f, Time.deltaTime);
         }
     }
 }

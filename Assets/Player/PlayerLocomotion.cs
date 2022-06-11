@@ -4,15 +4,12 @@ using UnityEngine.Rendering.PostProcessing;
 namespace Player
 {
     /**
-     * Computes player movement
+     * Computes player movement and strafing
      */
     public class PlayerLocomotion : MonoBehaviour
     {
         private const float FootSphereSize = 0.2f;
         private const float FootSpherecastDistance = 0.1f;
-
-        [SerializeField]
-        private Transform cameraTransform;
 
         [SerializeField]
         private Vector3 moveDirection;
@@ -88,7 +85,7 @@ namespace Player
             }
 
             HandleMovement();
-            HandleRotation();
+            // HandleRotation();
         }
 
         private void HandleMovement()
@@ -98,8 +95,10 @@ namespace Player
                 return;
             }
 
-            moveDirection = cameraTransform.forward * inputManager.verticalInput;
-            moveDirection += cameraTransform.right * inputManager.horizontalInput;
+            var t = transform;
+
+            moveDirection = t.forward * inputManager.verticalInput;
+            moveDirection += t.right * inputManager.horizontalInput;
             moveDirection.Normalize();
             // Prevent upward movement
             moveDirection.y = 0;
@@ -120,8 +119,10 @@ namespace Player
 
         private void HandleRotation()
         {
-            var targetDirection = cameraTransform.forward * inputManager.verticalInput;
-            targetDirection += cameraTransform.right * inputManager.horizontalInput;
+            var t = transform;
+
+            var targetDirection = t.forward * inputManager.verticalInput;
+            targetDirection += t.right * inputManager.horizontalInput;
             targetDirection.Normalize();
             targetDirection.y = 0;
 
@@ -177,7 +178,7 @@ namespace Player
                 return;
             }
 
-            animatorManager.animator.SetBool(AnimatorManager.IsJumpingParam, true);
+            animatorManager.SetBool(AnimatorManager.IsJumpingParam, true);
             animatorManager.PlayTargetAnimation(AnimatorManager.JumpAniKey, false);
             var jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
             // Preserve velocity before jump.

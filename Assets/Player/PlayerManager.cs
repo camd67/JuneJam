@@ -38,9 +38,9 @@ namespace Player
         {
             cameraManager.HandleAllCameraMovement();
 
-            isInteracting = animator.GetBool(AnimatorManager.IsInteractingParam);
-            playerLocomotion.isJumping = animator.GetBool(AnimatorManager.IsJumpingParam);
-            animator.SetBool(AnimatorManager.IsGroundedParam, playerLocomotion.isGrounded);
+            // isInteracting = animator.GetBool(AnimatorManager.IsInteractingParam);
+            // playerLocomotion.isJumping = animator.GetBool(AnimatorManager.IsJumpingParam);
+            // animator.SetBool(AnimatorManager.IsGroundedParam, playerLocomotion.isGrounded);
         }
     }
 }
