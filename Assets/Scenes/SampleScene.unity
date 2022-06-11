@@ -740,6 +740,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135e50cb9d5d34446b5a3e71553a6eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: 20
+  walkSpeed: 8
 --- !u!143 &567098585
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1091,7 +1093,6 @@ MonoBehaviour:
   minMaxRotationY: {x: -35, y: 50}
   rotationSpeedX: 2
   rotationY: 0
-  rotationX: 0
 --- !u!114 &848597535
 MonoBehaviour:
   m_ObjectHideFlags: 0
