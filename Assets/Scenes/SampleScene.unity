@@ -740,8 +740,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135e50cb9d5d34446b5a3e71553a6eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: 20
+  gravity: 0
   walkSpeed: 8
+  initialJumpVelocity: 0
+  maxJumpHeight: 1
+  maxJumpTime: 0.5
+  isJumping: 0
+  currentMoveVec: {x: 0, y: 0, z: 0}
 --- !u!143 &567098585
 CharacterController:
   m_ObjectHideFlags: 0

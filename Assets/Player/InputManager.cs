@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Player
@@ -27,13 +28,15 @@ namespace Player
 
         private AnimatorManager animatorManager;
         private PlayerInputMaps playerInputMaps;
-        private PlayerLocomotion playerLocomotion;
 
         private void Awake()
         {
             animatorManager = GetComponent<AnimatorManager>();
-            // TODO: Change to subscribe
-            playerLocomotion = GetComponent<PlayerLocomotion>();
+        }
+
+        private void Update()
+        {
+            HandleJumpInput();
         }
 
         private void OnEnable()
@@ -46,7 +49,7 @@ namespace Player
             playerInputMaps.PlayerActions.Sprint.performed += _ => isSprinting = true;
             playerInputMaps.PlayerActions.Sprint.canceled += _ => isSprinting = false;
 
-            playerInputMaps.PlayerActions.Jump.performed += _ => jumpInput = true;
+            playerInputMaps.PlayerActions.Jump.started += _ => jumpInput = true;
             playerInputMaps.PlayerActions.Jump.canceled += _ => jumpInput = false;
 
             playerInputMaps.Enable();
@@ -56,6 +59,8 @@ namespace Player
         {
             playerInputMaps.Disable();
         }
+
+        public event Action OnJump;
 
         public void HandleAllInputs()
         {
@@ -83,7 +88,7 @@ namespace Player
             if (jumpInput)
             {
                 jumpInput = false;
-                playerLocomotion.HandleJump();
+                OnJump?.Invoke();
             }
         }
     }
