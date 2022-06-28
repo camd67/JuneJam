@@ -11,10 +11,5 @@ namespace Player.Weapon
         {
             GetComponent<Rigidbody>().velocity = transform.forward * speed;
         }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            Destroy(gameObject);
-        }
     }
 }
