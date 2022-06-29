@@ -14,6 +14,9 @@ namespace Player
         [SerializeField]
         private float fireDelay;
 
+        [SerializeField]
+        public float damageMultiplier;
+
         private PlayerInput playerInput;
 
         private float timeSinceLastFire;
@@ -40,6 +43,8 @@ namespace Player
         private void FireWeapon()
         {
             var projectile = Instantiate(bulletPrefab, muzzleLocation.position, muzzleLocation.transform.rotation);
+            var damageOnCollide = projectile.GetComponent<DamageOnCollide>();
+            damageOnCollide.damageAmount *= damageMultiplier;
         }
     }
 }

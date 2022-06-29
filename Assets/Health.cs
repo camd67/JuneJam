@@ -31,6 +31,8 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    public event Action OnDeath;
+
     public void ApplyDamageFrom(float amount, DamageSource source)
     {
         if (!takesDamageFrom.HasFlag(source))
@@ -42,6 +44,7 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            OnDeath?.Invoke();
             Destroy(gameObject);
         }
     }

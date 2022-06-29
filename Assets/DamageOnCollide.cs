@@ -3,7 +3,7 @@ using UnityEngine;
 public class DamageOnCollide : MonoBehaviour
 {
     [SerializeField]
-    private float damageAmount;
+    public float damageAmount;
 
     [SerializeField]
     private Health.DamageSource damageType;
