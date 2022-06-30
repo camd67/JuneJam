@@ -8,13 +8,30 @@ public class DamageOnCollide : MonoBehaviour
     [SerializeField]
     private Health.DamageSource damageType;
 
+    [SerializeField]
+    private bool destroyOnAnyCollision;
+
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent(out Health health))
+        HandleCollision(collision.gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        HandleCollision(other.gameObject);
+    }
+
+    private void HandleCollision(GameObject other)
+    {
+        if (other.TryGetComponent(out Health health))
         {
             health.ApplyDamageFrom(damageAmount, damageType);
+            Destroy(gameObject);
         }
-
-        Destroy(gameObject);
+        else if (destroyOnAnyCollision)
+        {
+            Destroy(gameObject);
+        }
     }
 }

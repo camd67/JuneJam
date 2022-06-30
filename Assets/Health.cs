@@ -21,7 +21,7 @@ public class Health : MonoBehaviour
     private DamageSource takesDamageFrom;
 
     [SerializeField, Min(0f)]
-    private float maxHealth;
+    public float maxHealth;
 
     [SerializeField, Tooltip("Don't set this, it will be auto-initialized in the script")]
     private float currentHealth;
@@ -31,7 +31,16 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    /// <summary>
+    ///     Event firing upon death (aka health drops at or below 0)
+    /// </summary>
     public event Action OnDeath;
+
+    /// <summary>
+    ///     Event firing whenever health changes.
+    ///     Provides the current health to the event.
+    /// </summary>
+    public event Action<float> OnHealthChange;
 
     public void ApplyDamageFrom(float amount, DamageSource source)
     {
@@ -41,6 +50,8 @@ public class Health : MonoBehaviour
         }
 
         currentHealth -= amount;
+
+        OnHealthChange?.Invoke(currentHealth);
 
         if (currentHealth <= 0)
         {

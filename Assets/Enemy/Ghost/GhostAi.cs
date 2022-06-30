@@ -13,6 +13,11 @@ namespace Enemy.Ghost
 
         private void Update()
         {
+            if (PlayerManager.playerTransform == null)
+            {
+                return;
+            }
+
             var t = transform;
             var ghostPos = t.position;
             var targetPos = PlayerManager.playerTransform.position;

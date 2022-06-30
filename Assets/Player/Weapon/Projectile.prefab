@@ -143,3 +143,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageAmount: 1
   damageType: 2
+  destroyOnAnyCollision: 1
