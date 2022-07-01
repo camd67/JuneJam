@@ -63,6 +63,54 @@ namespace Player.InputSystem
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Global Actions"",
+            ""id"": ""74f9ff60-20b5-4922-9767-2da680bedd57"",
+            ""actions"": [
+                {
+                    ""name"": ""Restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""9dff5dae-227e-486e-bdd2-48e1a42c2b25"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Quit"",
+                    ""type"": ""Button"",
+                    ""id"": ""675e6138-d608-470c-a8f6-6366e9a8878e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e963ba03-f88f-48d5-a735-be6da4badf6d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""502e8cbb-f7e8-495c-8897-d563d91f1b85"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -70,6 +118,10 @@ namespace Player.InputSystem
             // Player Actions
             m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
             m_PlayerActions_Fire = m_PlayerActions.FindAction("Fire", throwIfNotFound: true);
+            // Global Actions
+            m_GlobalActions = asset.FindActionMap("Global Actions", throwIfNotFound: true);
+            m_GlobalActions_Restart = m_GlobalActions.FindAction("Restart", throwIfNotFound: true);
+            m_GlobalActions_Quit = m_GlobalActions.FindAction("Quit", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -158,9 +210,55 @@ namespace Player.InputSystem
             }
         }
         public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
+
+        // Global Actions
+        private readonly InputActionMap m_GlobalActions;
+        private IGlobalActionsActions m_GlobalActionsActionsCallbackInterface;
+        private readonly InputAction m_GlobalActions_Restart;
+        private readonly InputAction m_GlobalActions_Quit;
+        public struct GlobalActionsActions
+        {
+            private @PlayerInputActions m_Wrapper;
+            public GlobalActionsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Restart => m_Wrapper.m_GlobalActions_Restart;
+            public InputAction @Quit => m_Wrapper.m_GlobalActions_Quit;
+            public InputActionMap Get() { return m_Wrapper.m_GlobalActions; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(GlobalActionsActions set) { return set.Get(); }
+            public void SetCallbacks(IGlobalActionsActions instance)
+            {
+                if (m_Wrapper.m_GlobalActionsActionsCallbackInterface != null)
+                {
+                    @Restart.started -= m_Wrapper.m_GlobalActionsActionsCallbackInterface.OnRestart;
+                    @Restart.performed -= m_Wrapper.m_GlobalActionsActionsCallbackInterface.OnRestart;
+                    @Restart.canceled -= m_Wrapper.m_GlobalActionsActionsCallbackInterface.OnRestart;
+                    @Quit.started -= m_Wrapper.m_GlobalActionsActionsCallbackInterface.OnQuit;
+                    @Quit.performed -= m_Wrapper.m_GlobalActionsActionsCallbackInterface.OnQuit;
+                    @Quit.canceled -= m_Wrapper.m_GlobalActionsActionsCallbackInterface.OnQuit;
+                }
+                m_Wrapper.m_GlobalActionsActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Restart.started += instance.OnRestart;
+                    @Restart.performed += instance.OnRestart;
+                    @Restart.canceled += instance.OnRestart;
+                    @Quit.started += instance.OnQuit;
+                    @Quit.performed += instance.OnQuit;
+                    @Quit.canceled += instance.OnQuit;
+                }
+            }
+        }
+        public GlobalActionsActions @GlobalActions => new GlobalActionsActions(this);
         public interface IPlayerActionsActions
         {
             void OnFire(InputAction.CallbackContext context);
+        }
+        public interface IGlobalActionsActions
+        {
+            void OnRestart(InputAction.CallbackContext context);
+            void OnQuit(InputAction.CallbackContext context);
         }
     }
 }

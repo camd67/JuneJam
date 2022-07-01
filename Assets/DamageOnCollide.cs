@@ -26,8 +26,10 @@ public class DamageOnCollide : MonoBehaviour
     {
         if (other.TryGetComponent(out Health health))
         {
-            health.ApplyDamageFrom(damageAmount, damageType);
-            Destroy(gameObject);
+            if (health.ApplyDamageFrom(damageAmount, damageType))
+            {
+                Destroy(gameObject);
+            }
         }
         else if (destroyOnAnyCollision)
         {

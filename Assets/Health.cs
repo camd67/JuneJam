@@ -42,11 +42,11 @@ public class Health : MonoBehaviour
     /// </summary>
     public event Action<float> OnHealthChange;
 
-    public void ApplyDamageFrom(float amount, DamageSource source)
+    public bool ApplyDamageFrom(float amount, DamageSource source)
     {
         if (!takesDamageFrom.HasFlag(source))
         {
-            return;
+            return false;
         }
 
         currentHealth -= amount;
@@ -58,5 +58,7 @@ public class Health : MonoBehaviour
             OnDeath?.Invoke();
             Destroy(gameObject);
         }
+
+        return true;
     }
 }

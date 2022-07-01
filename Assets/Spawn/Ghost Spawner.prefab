@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toSpawn: {fileID: 2551037209781141718, guid: e6154844ea0e4174bb9bf3be2b2c4ff7, type: 3}
   spawnRatePerSecond: 0.5
+  maxSpawnCount: -1

@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takesDamageFrom: 2
-  maxHealth: 2
+  maxHealth: 4
   currentHealth: 0
 --- !u!114 &-9136788314253092429
 MonoBehaviour:
