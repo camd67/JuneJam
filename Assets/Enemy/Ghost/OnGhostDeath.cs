@@ -1,3 +1,4 @@
+using Player.hud;
 using UnityEngine;
 
 namespace Enemy.Ghost
@@ -14,6 +15,8 @@ namespace Enemy.Ghost
         {
             GetComponent<Health>().OnDeath += () =>
             {
+                DeathCounter.Increment();
+
                 if (Random.value <= dropChance)
                 {
                     Instantiate(powerupPrefab, transform.position, Quaternion.identity);
